@@ -1,0 +1,33 @@
+body{
+    background-color: black;
+}
+#caixacentral{
+    display: flex;
+    justify-content: center;
+}
+canvas{
+    height: 90%;
+    width: 90%;
+    background-color: white;
+    
+}
+#menu{
+    position: absolute;
+    z-index: 10;
+}
+#jogo{
+    position: absolute;
+    z-index: 1;
+}
+#fase1{
+    position: absolute;
+    z-index: 0;
+    background-color: black;
+    
+
+}
+#personagem{
+    position: absolute;
+    opacity: 0;
+    z-index: 999;
+}
