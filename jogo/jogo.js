@@ -1,9 +1,41 @@
+/*---CLASSES--*/
+
 var variavel_global={
-    contando_enter:0,
+    contando_enter: 0,
     cancelarmenu: null,
     cancelarjogo: null,
     cancelarjogo2: null,
-    teclado:null
+    teclado:null,
+    timer: null,
+    ativarteclado: function(){
+        document.addEventListener("keydown",function(evento){
+        variavel_global.teclado = evento.key;
+            
+        clearTimeout(this.timer);
+
+   
+    this.timer = setTimeout(function() {
+        variavel_global.teclado=null;
+    }, 100);
+
+        if(variavel_global.teclado== "Enter"){
+            console.log(variavel_global.contando_enter)
+            variavel_global.contando_enter +=1
+        } 
+        if(variavel_global.contando_enter==1){
+        letras.canvas.remove();}
+
+        /*SELECAO DOS PERSONAGENS */
+        if(variavel_global.contando_enter==2){
+
+            if(variavel_global.teclado == "ArrowLeft") {if(fundo_img.escolha==1){fundo_img.escolha = 3}else if(fundo_img.escolha==3){fundo_img.escolha = 2}else if(fundo_img.escolha == 2){fundo_img.escolha=1} }
+            else if(variavel_global.teclado == "ArrowRight"){if(fundo_img.escolha==3){fundo_img.escolha = 1}else if(fundo_img.escolha==1){fundo_img.escolha = 2}else if(fundo_img.escolha == 2){fundo_img.escolha=3} } 
+
+
+        }
+    
+    })
+    }
 };
 var quadrado_preto = {
     canvas: document.getElementById("menu"),
@@ -63,12 +95,13 @@ var fundo_img = {
     contar2: 0,
     contar3: 0,
     contar4: 0,
-    cor: "white",   
+    cor: "darkblue",   
     img: new Image(),
     img2 : new Image(),
     vini: new Image(),
     vitoria: new Image(),
     diego: new Image(),
+    /*FUNDO DO MENU */
     imagem: function() {
             this.img.src = "IMAGENS/menu.png";
             this.img2.src = "IMAGENS/logo.png";
@@ -77,19 +110,26 @@ var fundo_img = {
             this.ctx.fillRect(this.canvas.width*0.2, this.canvas.width*0.04, this.canvas.width*0.6, this.canvas.height*0.45);
             this.ctx.drawImage(this.img2, this.canvas.width*0.2, 0, this.canvas.width*0.6, this.canvas.height*0.6);
     },
-    largura_original:document.getElementById("jogo").height*0.4,
-    altura_original: document.getElementById("jogo").width*0.2,
-    largura1: document.getElementById("jogo").height*0.4,
-    altura1: document.getElementById("jogo").width*0.2,
-    largura2: document.getElementById("jogo").height*0.4,
-    altura2: document.getElementById("jogo").width*0.2,
-    largura3: document.getElementById("jogo").height*0.4,
-    altura3: document.getElementById("jogo").width*0.2,
+
+
+    largura_original:document.getElementById("jogo").width*0.2,
+    altura_original: document.getElementById("jogo").height*0.25,
+
+    largura1: document.getElementById("jogo").width*0.2,
+    altura1: document.getElementById("jogo").height*0.25,
+
+    largura2: document.getElementById("jogo").width*0.2,
+    altura2: document.getElementById("jogo").height*0.25,
+
+    largura3: document.getElementById("jogo").width*0.2,
+    altura3: document.getElementById("jogo").height*0.25,
+
     escolha: 1,
+    /*PERSONAGENS NA TELA DE MENU */
     imagem2: function() {
             this.ctx.beginPath();
             this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height)
-            this.img.src = "IMAGENS/menu.png";
+            this.img.src = "IMAGENS/menu2.png";
             if (this.contar3==10){
 
                 if(this.contar4==10){
@@ -117,9 +157,12 @@ var fundo_img = {
             this.ctx.drawImage(this.vitoria, this.canvas.width*0.4, this.canvas.height*0.5, this.altura2, this.largura2);
             this.ctx.drawImage(this.diego, this.canvas.width*0.7, this.canvas.height*0.5, this.altura3, this.largura3);
             this.ctx.fillStyle = letras.cor;
-            this.ctx.font = letras.fonte;
+            this.ctx.strokeStyle = "black"; 
+            this.ctx.lineWidth = 2;        
+            this.ctx.font = "20px monospace";
             this.ctx.textAlign = letras.posicao;
-            this.ctx.fillText("ESCOLHA SEU HEROI",letras.x,letras.y);
+            this.ctx.strokeText("ESCOLHA SEU HEROI", letras.x, letras.y);
+            this.ctx.fillText("ESCOLHA SEU HEROI", letras.x, letras.y);
             this.ctx.closePath()
             
     }
@@ -128,96 +171,111 @@ var fundofase1 ={
 escolha: null,
 canvas: document.getElementById("fase1"),
 fundo: new Image(),
-x:document.getElementById("fase1").width*0,
-y:document.getElementById("fase1").height*-1.0,
-x_origin:document.getElementById("fase1").width*0,
-y_origin:document.getElementById("fase1").height*-1.0,
-
-
+x:document.getElementById("fase1").width*-1,
+y:document.getElementById("fase1").height*-1.5,
+x_origin:document.getElementById("fase1").width*-1,
+y_origin:document.getElementById("fase1").height*-1.5,
+x_inimigo: (document.getElementById("fase1").width*0)+500,
+y_inimigo: (document.getElementById("fase1").height*-1.0)+150,
 iniciar: function(){
-this.fundo.src="IMAGENS/fase1.png"
+this.fundo.src="IMAGENS/fase1.png";
 var ctx = this.canvas.getContext("2d");
 ctx.clearRect(0,0,this.canvas.width,this.canvas.height)
 ctx.beginPath()
-ctx.drawImage(this.fundo,this.x,this.y,this.canvas.width*2.5,this.canvas.height*2.5)
-ctx.closePath()
-}};
+ctx.drawImage(this.fundo,this.x,this.y,this.canvas.width*4.5,this.canvas.height*4.5)
+ctx.closePath()}
+};
 var atributos_personagem ={
     personagem: document.getElementById("personagem"),
-    animacao: 0
-}
-
-document.addEventListener('keydown',function(evento2){
-    tecla = evento2.key;
-    variavel_global.teclado = tecla
-    if(variavel_global.contando_enter>=3){
-    if(tecla == 'ArrowLeft') {
-        if(fundofase1.x>=fundofase1.x_origin){
-            fundofase1.x==fundofase1.x_origin;
-        }else{fundofase1.x += 5
-
-        } 
-       
-    }
-    else if(tecla == 'ArrowRight'){
-        if(fundofase1.x*-1>=fundofase1.canvas.width+140){
-            fundofase1.x =(fundofase1.canvas.width+140)*-1;
+    animacao: 0,
+    largura: 35,
+    altura: 10,
+    largura_originalp:35,
+    altura_originalp:10,
+    imagens: [["IMAGENS/personagem/vini2.png","IMAGENS/personagem/vini3.png","IMAGENS/personagem/vini4.png","IMAGENS/personagem/vini5.png","IMAGENS/personagem/vini6.png"],["IMAGENS/personagem/vitoria2.png","IMAGENS/personagem/vitoria3.png","IMAGENS/personagem/vitoria4.png","IMAGENS/personagem/vitoria5.png","IMAGENS/personagem/vitoria6.png"], ["IMAGENS/personagem/diego2.png","IMAGENS/personagem/diego3.png","IMAGENS/personagem/diego4.png","IMAGENS/personagem/diego5.png","IMAGENS/personagem/diego6.png"]],
+    gerar: function(){
+        this.animacao = 0;
+        if(variavel_global.teclado=="ArrowRight"){
+            this.animacao=1;
+            if(fundofase1.x*-1>=fundofase1.canvas.width+700){
+                fundofase1.x =(fundofase1.canvas.width+700)*-1;
+                
+            }
+            fundofase1.x -= 5
+            
             
         }
-        fundofase1.x -= 5
-         
-    }
-    else if(tecla == 'ArrowUp'){
-        if(fundofase1.y==fundofase1.y_origin){
-            fundofase1.y+=20;
-
-        }else{
-            fundofase1.y=fundofase1.y_origin;
+        else if(variavel_global.teclado=="ArrowLeft"){
+            this.animacao=2;
+            if(fundofase1.x>=fundofase1.x_origin+50){
+                fundofase1.x = fundofase1.x_origin+50;
+                
+            }
+            fundofase1.x += 5
+          
+            
         }
-    }
-    else if(tecla == 'ArrowDown'){}
-    else{
+        else if(variavel_global.teclado=="ArrowUp"){
+            this.animacao=3;
+            if(fundofase1.y>=fundofase1.y_origin+30){
+                fundofase1.y = fundofase1.y_origin+30;
 
+            }
+            if(this.altura <= this.altura_originalp){
 
-    }
-}
-})
+            }else{
+                this.altura -=0.1
+                this.largura -=0.1
+            }
+            fundofase1.y += 5
+            
+            
+        }else if(variavel_global.teclado=="ArrowDown"){
+            this.animacao=4;
+            if(fundofase1.y<=fundofase1.y_origin-250){
+                fundofase1.y = fundofase1.y_origin-250;
+                
 
+                
+            }
+            fundofase1.y -= 5
+    
+            if(this.altura >= this.altura_originalp +5){
 
-
-
-
-function jogo(){
-     abertura()
-}
-
-function abertura() {
-        document.addEventListener('keydown', function(enter) {
-    if (enter.key === "Enter") {
-        variavel_global.contando_enter+=1
-        letras.canvas.style.opacity = 0;
-        letras.canvas.remove();
-
+            }else{
+                this.altura +=0.1
+                this.largura +=0.1
+            }
+        }
         
-        if(variavel_global.contando_enter==2){
-            document.addEventListener('keydown',function(evento){
-    tecla = evento.key;
-    if(tecla == 'ArrowLeft') {if(fundo_img.escolha==1){fundo_img.escolha = 3}else if(fundo_img.escolha==3){fundo_img.escolha = 2}else if(fundo_img.escolha == 2){fundo_img.escolha=1} }
-    if(tecla == 'ArrowRight'){if(fundo_img.escolha==3){fundo_img.escolha = 1}else if(fundo_img.escolha==1){fundo_img.escolha = 2}else if(fundo_img.escolha == 2){fundo_img.escolha=3} } 
-})
-            animacaojogo2()
 
-        }
+        this.personagem.src= this.imagens[fundofase1.escolha-1][this.animacao];
+        this.personagem.style="opacity:1;top:"+fundofase1.canvas.height*1.2+"px;left:"+fundofase1.canvas.width+"px;height:"+this.largura+"%;width:"+this.altura+"%;";
     }
-});
 
-    animacaomenu()
-    animacaojogo()
-    
-
-    
 }
 
+
+/*---FIM DAS CLASSES--*/
+/*FUNÇAO PRINCIPAL */
+function jogo(){
+
+
+   
+
+    /*ATIVA O TECLADO */
+    variavel_global.ativarteclado();
+     /*ANIMAÇÂO DE ENTRADA 'TELA PRETA'*/
+    animacaomenu()
+    /*Chama a função para abrir a tela de menu*/
+     animacaojogo()
+    /*MOVIMENTAÇÃO DO INICIO DA FASE */
+    
+
+}
+/* ABERTURA DO JOGO*/
+
+/*FUNÇAO QUE ANIMA O QUADRADO DO MENU */
 function animacaomenu(){
     if(quadrado_preto.x==0){
         quadrado_preto.x = quadrado_preto.canvas.width * 0.5
@@ -228,13 +286,18 @@ function animacaomenu(){
     quadrado_preto.x -=  1
     quadrado_preto.y -= 1
     quadrado_preto.crescer();
+    /*ENTRA DENTRO DO IF CASO O QUADRADO FIQUE NO TAMANHO OU MAIOR DO TAMANHO DO QUADRADO DO CANVAS*/
     if(quadrado_preto.altura >= quadrado_preto.canvas.width){
-        animacao2menu()
+        /*CANCELA A PRIMEIRA ANIMACAO DO MENU PARA COMEÇAR A OUTRA */
         cancelAnimationFrame(variavel_global.cancelarmenu);
+        animacao2menu()
+        
     }else{
+        /*AQUI DA UM VALOR PARA A VARIAVEL PARA DEPOIS EU CANCELAR ESSA ANIMAÇAO ESPECIFICA*/
     variavel_global.cancelarmenu =requestAnimationFrame(animacaomenu);
  }
 }
+/*CONTINUAÇAO DA ANIMACAO DO MENU */
 function animacao2menu(){
     letras.ctx = letras.canvas.getContext("2d");
     letras.canvas.style.backgroundColor="black";
@@ -243,16 +306,19 @@ function animacao2menu(){
     letras.y = letras.canvas.height * 0.2   
     letras.aparecer("Seja bem vindo");   
    
-
+    /*FAZ QUE A LETRA FIQUE FLUTUANTE */
     if(letras.y2==0){
         letras.x2 = letras.canvas.width * 0.5
         letras.y2 = letras.canvas.height * 0.5
     }
+    /*CASO A LETRA TENHA CHEGADO AO VALOR DE 10 NO CONTADOR ELA ENTRA NO IF */
     else if (letras.contar==10){
+            /*DENTRO DO IF VAI TER UM OUTRO CONTADOR QUE VAI SOMAR 10 TAMBEM SO QUE O y VAI PARA POSIÇAO NEGATIVA E DEPOIS QUE CONTAR ATE 10 O PRIMEIRO CONTADOR REZETA E VOLTA TUDO DENOVO */
             if(letras.contar2==10){
                 letras.contar=0
-                letras.contar2=0
-            }else{
+                letras.contar2=0}
+            else
+                {
                 letras.contar2+=1
                 letras.y2 +=0.5
             }
@@ -264,9 +330,11 @@ function animacao2menu(){
               
     }
     letras.aparecer2("Precione Enter para entrar");
-   requestAnimationFrame(animacao2menu);  
-}
+    requestAnimationFrame(animacao2menu)
 
+    
+}
+/*ANIMAÇÂO QUE FAZ O MOVIMENTO DE FUNDO DO MENU*/
 function animacaojogo(){
 if (fundo_img.contar==50){
             if(fundo_img.contar2==50){
@@ -283,14 +351,23 @@ else{
             
         
     }
+
 fundo_img.imagem();
 if(variavel_global.contando_enter==2){
-    cancelAnimationFrame(variavel_global.cancelarjogo)
+    cancelAnimationFrame(variavel_global.cancelarjogo);
+    animacaojogo2()
 
 } else{
     variavel_global.cancelarjogo=requestAnimationFrame(animacaojogo);}
 }
+/*FUNÇÂO DA ANIMAÇÂO DA TELA DE MENU */
 function animacaojogo2(){
+
+fundo_img.imagem2()
+
+  /*SELEÇÂO DOS PERSONAGENS */
+
+/*AQUI FAZ OS PERSONAGEM CRESCER CASO SEJA SELECIONADO */
 if(fundo_img.escolha==1){
     fundo_img.altura1 =fundo_img.altura_original*1.2;
     fundo_img.largura1 =fundo_img.largura_original*1.2;
@@ -314,76 +391,36 @@ else if(fundo_img.escolha==3){
     fundo_img.altura1 = fundo_img.altura_original;
     fundo_img.largura1 = fundo_img.largura_original;
 }
-    
-fundo_img.imagem2();
 if(variavel_global.contando_enter==3){
+
     cancelAnimationFrame(variavel_global.cancelarjogo2);
     fundo_img.canvas.remove();
-    fundofase1.escolha = fundo_img.escolha; 
+    /*AQUI SALVA A ESCOLHA DO USUARIO */
+    fundofase1.escolha = fundo_img.escolha;
+    /*AQUI OBRIGA A NUNCA MAIS ENTRAR NESSA IF */ 
     variavel_global.contando_enter+=1;
-    if(fundofase1.escolha==1){
-        atributos_personagem.personagem.src="IMAGENS/personagem/vini2.png";
-
-    }else if(fundofase1.escolha==2){
-        atributos_personagem.personagem.src="IMAGENS/personagem/vitoria2.png";
-        
-    }else if(fundofase1.escolha==3){
-        atributos_personagem.personagem.src="IMAGENS/personagem/diego2.png";
-        
-    }
-    atributos_personagem.personagem.style="opacity:1;top:"+fundofase1.canvas.height+"px;left:"+fundofase1.canvas.width+"px;height:250px;width:150px;";
     
     fase1()
-    }else{
-variavel_global.cancelarjogo2=requestAnimationFrame(animacaojogo2);}
+    
+}else{
+    variavel_global.cancelarjogo2=requestAnimationFrame(animacaojogo2)
+}    
 }
+
+/*GERANDO A FASE 1 */
 function fase1(){
-personagem()
+
+if(variavel_global.contando_enter>=3){
+    /*AQUI VAI VERIFICAR A ESCOLHA E IRA ESCOLHER A IMAGEM */
+
+    atributos_personagem.gerar()
+
+    }
+
+
+
 fundofase1.iniciar()
 requestAnimationFrame(fase1)
-
-
-}
-function personagem(){
-// Mapas de imagens por fundo e estado
-const imagens = {
-    1: { parado: "IMAGENS/personagem/vini2.png", andando: "IMAGENS/personagem/vini3.png" },
-    2: { parado: "IMAGENS/personagem/vitoria2.png", andando: "IMAGENS/personagem/vitoria3.png" },
-    3: { parado: "IMAGENS/personagem/diego2.png", andando: "IMAGENS/personagem/diego3.png" }
-};
-
-// Variável para saber se a tecla está pressionada
-let teclaDireitaPressionada = false;
-
-// Detecta tecla pressionada
-document.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowRight") {
-        teclaDireitaPressionada = true;
-        atributos_personagem.personagem.src = imagens[fundofase1.escolha].andando;
-        atributos_personagem.animacao = 1;
-    }
-});
-
-// Detecta tecla solta
-document.addEventListener("keyup", (e) => {
-    if (e.key === "ArrowRight") {
-        teclaDireitaPressionada = false;
-        atributos_personagem.personagem.src = imagens[fundofase1.escolha].parado;
-        atributos_personagem.animacao = 0;
-    }
-});
-
-// Se quiser, você pode ainda verificar continuamente em um loop de update
-// para outras teclas ou lógica do jogo.
-
-
-
 }
 
 
-
-
-
-
-
-jogo();
