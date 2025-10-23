@@ -36,7 +36,8 @@ var variavel_global={
     
     })
     },
-    cair: [370,450,680,760]
+    cair: [380,500,700,780],
+    inimigos: [[650,true]]
 
 };
 var quadrado_preto = {
@@ -173,16 +174,22 @@ var fundofase1 ={
 escolha: null,
 canvas: document.getElementById("fase1"),
 fundo: new Image(),
+inimigos: new Image(),
 x:document.getElementById("fase1").width*-1,
 y:document.getElementById("fase1").height*-2.15,
 x_origin:document.getElementById("fase1").width*-1,
 y_origin:document.getElementById("fase1").height*-2.15,
 iniciar: function(){
 this.fundo.src="IMAGENS/fase1.png";
+this.inimigos.src="IMAGENS/vilao/inimigo.gif";
 var ctx = this.canvas.getContext("2d");
 ctx.clearRect(0,0,this.canvas.width,this.canvas.height)
 ctx.beginPath()
 ctx.drawImage(this.fundo,this.x,this.y,this.canvas.width*4.5,this.canvas.height*4.5)
+if(variavel_global.inimigos[0][1]==true){
+    ctx.drawImage(this.inimigos,this.x+variavel_global.inimigos[0][0],this.y+370,this.canvas.width*0.3,this.canvas.height*0.3)
+}
+
 ctx.closePath()}
 };
 var atributos_personagem ={
@@ -199,51 +206,59 @@ var atributos_personagem ={
         if(this.chao==true){ 
 
             if((fundofase1.x*-1>=variavel_global.cair[0] && fundofase1.x*-1<=variavel_global.cair[1]) || (fundofase1.x*-1>=variavel_global.cair[2] && fundofase1.x*-1<=variavel_global.cair[3])){
-                fundofase1.x = fundofase1.x_origin;
-                    console.log("CAIU");
+                fundofase1.y -= 5;
+                if(fundofase1.y==fundofase1.y_origin-150){
+                    fundofase1.x= fundofase1.x_origin;
+                    fundofase1.y= fundofase1.y_origin;
+                }
             }
             else{        
-                if(variavel_global.teclado=="ArrowRight"){
-                        this.animacao=1;
-                        if(fundofase1.x*-1>=fundofase1.canvas.width+700){
-                            fundofase1.x =(fundofase1.canvas.width+700)*-1;
+                if(fundofase1.x*-1>=variavel_global.inimigos[0][0]-fundofase1.canvas.width*0.2 && fundofase1.x*-1<=variavel_global.inimigos[0][0]+fundofase1.canvas.width*0.1 && variavel_global.inimigos[0][1]==true){
+                    fundofase1.x=fundofase1.x_origin;
+                }    
+                else{if(variavel_global.teclado=="ArrowRight"){
+                            this.animacao=1;
+                           /* if(fundofase1.x*-1>=fundofase1.canvas.width+700){
+                                fundofase1.x =(fundofase1.canvas.width+700)*-1;
+                                
+                            }*/
+                            fundofase1.x -= 5
+                            
                             
                         }
-                        fundofase1.x -= 5
+                        else if(variavel_global.teclado=="ArrowLeft"){
+                            this.animacao=2;
+                            if(fundofase1.x>=fundofase1.x_origin+50){
+                                fundofase1.x = fundofase1.x_origin+50;
+                                
+                            }
+                            fundofase1.x += 5
                         
-                        
-                    }
-                    else if(variavel_global.teclado=="ArrowLeft"){
-                        this.animacao=2;
-                        if(fundofase1.x>=fundofase1.x_origin+50){
-                            fundofase1.x = fundofase1.x_origin+50;
                             
                         }
-                        fundofase1.x += 5
+                        else if(variavel_global.teclado=="ArrowUp"){
+                            if(this.chao==true){
+                                this.chao = false;
+                            }
+                            
+                        }else if(variavel_global.teclado=="ArrowDown"){
+                            this.animacao=4;
+                            
                     
-                        
-                    }
-                    else if(variavel_global.teclado=="ArrowUp"){
-                        if(this.chao==true){
-                            this.chao = false;
-                        }
-                        
-                    }else if(variavel_global.teclado=="ArrowDown"){
-                        this.animacao=4;
-                        
-                
-                    }
+                        }}
                 }
                     
                 
         }
         else{
             this.animacao=3;
-            console.log(fundofase1.y);
-             if(fundofase1.y==fundofase1.y_origin){
+             if(this.gravidade==10){
+                if(fundofase1.x*-1>=variavel_global.inimigos[0][0]-fundofase1.canvas.width*0.2 && fundofase1.x*-1<=variavel_global.inimigos[0][0]+fundofase1.canvas.width*0.1 && variavel_global.inimigos[0][1]==true){
+                    variavel_global.inimigos[0][1]=false;
+                }
                         this.chao=true;
                         this.gravidade = -10;
-                        
+                        fundofase1.y = fundofase1.y_origin+this.gravidade;
                 }
                 if(variavel_global.teclado=="ArrowLeft"){
                     this.animacao=2;
@@ -251,7 +266,7 @@ var atributos_personagem ={
                     fundofase1.x = fundofase1.x_origin+50;
                     
                     }
-                    fundofase1.x += 10
+                    fundofase1.x += 15
                 }
                 if(variavel_global.teclado=="ArrowRight"){
                 this.animacao=1;
@@ -259,7 +274,7 @@ var atributos_personagem ={
                     fundofase1.x =(fundofase1.canvas.width+700)*-1;
                     
                 }
-                fundofase1.x -= 10
+                fundofase1.x -= 15
                 
                 
                 }
@@ -267,8 +282,7 @@ var atributos_personagem ={
                 this.gravidade += 0.5;
             }
             
-        
-        console.log(fundofase1.x);
+
         this.personagem.src= this.imagens[fundofase1.escolha-1][this.animacao];
         this.personagem.style="opacity:1;top:"+fundofase1.canvas.height*1.15+"px;left:"+fundofase1.canvas.width+"px;height:"+this.largura+"%;width:"+this.altura+"%;";
     }
