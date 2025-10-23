@@ -35,7 +35,9 @@ var variavel_global={
         }
     
     })
-    }
+    },
+    cair: [370,450,680,760]
+
 };
 var quadrado_preto = {
     canvas: document.getElementById("menu"),
@@ -172,11 +174,9 @@ escolha: null,
 canvas: document.getElementById("fase1"),
 fundo: new Image(),
 x:document.getElementById("fase1").width*-1,
-y:document.getElementById("fase1").height*-1.5,
+y:document.getElementById("fase1").height*-2.15,
 x_origin:document.getElementById("fase1").width*-1,
-y_origin:document.getElementById("fase1").height*-1.5,
-x_inimigo: (document.getElementById("fase1").width*0)+500,
-y_inimigo: (document.getElementById("fase1").height*-1.0)+150,
+y_origin:document.getElementById("fase1").height*-2.15,
 iniciar: function(){
 this.fundo.src="IMAGENS/fase1.png";
 var ctx = this.canvas.getContext("2d");
@@ -190,67 +190,87 @@ var atributos_personagem ={
     animacao: 0,
     largura: 35,
     altura: 10,
-    largura_originalp:35,
-    altura_originalp:10,
+    gravidade: -10,
+    chao: true,
     imagens: [["IMAGENS/personagem/vini2.png","IMAGENS/personagem/vini3.png","IMAGENS/personagem/vini4.png","IMAGENS/personagem/vini5.png","IMAGENS/personagem/vini6.png"],["IMAGENS/personagem/vitoria2.png","IMAGENS/personagem/vitoria3.png","IMAGENS/personagem/vitoria4.png","IMAGENS/personagem/vitoria5.png","IMAGENS/personagem/vitoria6.png"], ["IMAGENS/personagem/diego2.png","IMAGENS/personagem/diego3.png","IMAGENS/personagem/diego4.png","IMAGENS/personagem/diego5.png","IMAGENS/personagem/diego6.png"]],
     gerar: function(){
-        this.animacao = 0;
-        if(variavel_global.teclado=="ArrowRight"){
-            this.animacao=1;
-            if(fundofase1.x*-1>=fundofase1.canvas.width+700){
-                fundofase1.x =(fundofase1.canvas.width+700)*-1;
-                
-            }
-            fundofase1.x -= 5
-            
-            
-        }
-        else if(variavel_global.teclado=="ArrowLeft"){
-            this.animacao=2;
-            if(fundofase1.x>=fundofase1.x_origin+50){
-                fundofase1.x = fundofase1.x_origin+50;
-                
-            }
-            fundofase1.x += 5
-          
-            
-        }
-        else if(variavel_global.teclado=="ArrowUp"){
-            this.animacao=3;
-            if(fundofase1.y>=fundofase1.y_origin+30){
-                fundofase1.y = fundofase1.y_origin+30;
-
-            }
-            if(this.altura <= this.altura_originalp){
-
-            }else{
-                this.altura -=0.1
-                this.largura -=0.1
-            }
-            fundofase1.y += 5
-            
-            
-        }else if(variavel_global.teclado=="ArrowDown"){
-            this.animacao=4;
-            if(fundofase1.y<=fundofase1.y_origin-250){
-                fundofase1.y = fundofase1.y_origin-250;
-                
-
-                
-            }
-            fundofase1.y -= 5
-    
-            if(this.altura >= this.altura_originalp +5){
-
-            }else{
-                this.altura +=0.1
-                this.largura +=0.1
-            }
-        }
         
+        this.animacao = 0;
+        if(this.chao==true){ 
 
+            if((fundofase1.x*-1>=variavel_global.cair[0] && fundofase1.x*-1<=variavel_global.cair[1]) || (fundofase1.x*-1>=variavel_global.cair[2] && fundofase1.x*-1<=variavel_global.cair[3])){
+                fundofase1.x = fundofase1.x_origin;
+                    console.log("CAIU");
+            }
+            else{        
+                if(variavel_global.teclado=="ArrowRight"){
+                        this.animacao=1;
+                        if(fundofase1.x*-1>=fundofase1.canvas.width+700){
+                            fundofase1.x =(fundofase1.canvas.width+700)*-1;
+                            
+                        }
+                        fundofase1.x -= 5
+                        
+                        
+                    }
+                    else if(variavel_global.teclado=="ArrowLeft"){
+                        this.animacao=2;
+                        if(fundofase1.x>=fundofase1.x_origin+50){
+                            fundofase1.x = fundofase1.x_origin+50;
+                            
+                        }
+                        fundofase1.x += 5
+                    
+                        
+                    }
+                    else if(variavel_global.teclado=="ArrowUp"){
+                        if(this.chao==true){
+                            this.chao = false;
+                        }
+                        
+                    }else if(variavel_global.teclado=="ArrowDown"){
+                        this.animacao=4;
+                        
+                
+                    }
+                }
+                    
+                
+        }
+        else{
+            this.animacao=3;
+            console.log(fundofase1.y);
+             if(fundofase1.y==fundofase1.y_origin){
+                        this.chao=true;
+                        this.gravidade = -10;
+                        
+                }
+                if(variavel_global.teclado=="ArrowLeft"){
+                    this.animacao=2;
+                    if(fundofase1.x>=fundofase1.x_origin+50){
+                    fundofase1.x = fundofase1.x_origin+50;
+                    
+                    }
+                    fundofase1.x += 10
+                }
+                if(variavel_global.teclado=="ArrowRight"){
+                this.animacao=1;
+                if(fundofase1.x*-1>=fundofase1.canvas.width+700){
+                    fundofase1.x =(fundofase1.canvas.width+700)*-1;
+                    
+                }
+                fundofase1.x -= 10
+                
+                
+                }
+                fundofase1.y += (this.gravidade)*-1;
+                this.gravidade += 0.5;
+            }
+            
+        
+        console.log(fundofase1.x);
         this.personagem.src= this.imagens[fundofase1.escolha-1][this.animacao];
-        this.personagem.style="opacity:1;top:"+fundofase1.canvas.height*1.2+"px;left:"+fundofase1.canvas.width+"px;height:"+this.largura+"%;width:"+this.altura+"%;";
+        this.personagem.style="opacity:1;top:"+fundofase1.canvas.height*1.15+"px;left:"+fundofase1.canvas.width+"px;height:"+this.largura+"%;width:"+this.altura+"%;";
     }
 
 }
